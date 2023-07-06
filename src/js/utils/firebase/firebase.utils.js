@@ -30,6 +30,9 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+export const db = getFirestore(firebaseApp);
+
+const invoicesCollectionRef = collection(db, "invoices");
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
@@ -48,22 +51,26 @@ export const createUserDocumentFromAuth = async (
 
   const userDocRef = doc(db, "users", userAuth.uid);
 
-  const userSnapshot = await getDoc(userDocRef);
+  try {
+    const userSnapshot = await getDoc(userDocRef);
 
-  if (!userSnapshot.exists()) {
-    const { displayName, email } = userAuth;
-    const createdAt = new Date();
+    if (!userSnapshot.exists()) {
+      const { displayName, email } = userAuth;
+      const createdAt = new Date();
 
-    try {
-      await setDoc(userDocRef, {
-        displayName,
-        email,
-        createdAt,
-        ...additionalInformation,
-      });
-    } catch (error) {
-      console.log("error creating the user", error.message);
+      try {
+        await setDoc(userDocRef, {
+          displayName,
+          email,
+          createdAt,
+          ...additionalInformation,
+        });
+      } catch (error) {
+        console.log("error creating the user", error.message);
+      }
     }
+  } catch (err) {
+    console.log('Error getting document', err);
   }
 
   return userDocRef;
@@ -81,16 +88,29 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const db = getFirestore(firebaseApp);
+
 export const getInvoices = async (userId) => {
   const invoicesCol = collection(db, "invoices");
   const q = query(invoicesCol, where("userId", "==", userId));
 
   const invoiceSnapshot = await getDocs(q);
-  const invoiceList = invoiceSnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  const invoiceList = invoiceSnapshot.docs.map((doc) => {
+    const data = doc.data()
+    const late = new Date() - new Date(data.paymentDue)
+    if (late > 0 && data.status == "pending"){
+      return {
+        id: doc.id,
+        ...data,
+        status: "late"
+      }
+    }else{
+      return {
+        id: doc.id,
+        ...data
+      }
+    }
+  });
+  console.log(invoiceList)
   return invoiceList;
 };
 
@@ -109,7 +129,6 @@ export const addCollectionAndDocuments = async (
   await batch.commit();
 };
 
-const invoicesCollectionRef = collection(db, "invoices");
 export const addInvoiceToFireStore = async (data) => {
   await addDoc(invoicesCollectionRef, data);
 };

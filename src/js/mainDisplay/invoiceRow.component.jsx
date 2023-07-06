@@ -12,7 +12,7 @@ const InvoiceRow = ({ invoice }) => {
       <div className="text-blue-medium inv-due">{invoice.paymentDue}</div>
       <div className="text-blue-dark inv-client">{invoice.clientName}</div>
       <div className="fw-bold font16 text-align-center inv-total">
-        ${invoice.total}
+        &#8377; {invoice.total}
       </div>
       <div className="invoice-last-column inv-status">
         <InvoiceStatus color={statusColor} status={invoice.status} />

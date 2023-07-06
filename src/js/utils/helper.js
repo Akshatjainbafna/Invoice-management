@@ -1,6 +1,9 @@
 export const findStatusButtonColor = (status) => {
   let statusColor;
   switch (status) {
+    case "late":
+      statusColor = "red";
+      break;
     case "paid":
       statusColor = "green";
       break;
@@ -36,7 +39,7 @@ export const formatDate = (givenDate) => {
 };
 
 export const curencyFormatNumber = (number) =>
-  new Intl.NumberFormat("en-IN", { style: "currency", currency: "GBP" }).format(
+  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(
     number
   );
 

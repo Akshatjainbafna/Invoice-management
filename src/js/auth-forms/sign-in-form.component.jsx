@@ -30,9 +30,13 @@ const SignInForm = () => {
 
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
-    login(user);
-    navigate("/home");
+    console.log(user)
+    const redirect = await createUserDocumentFromAuth(user);
+    console.log(redirect);
+    if (redirect) {
+      login(user);
+      navigate("/home");
+    }
   };
 
   const handleSubmit = async (event) => {

@@ -58,7 +58,10 @@
   line-height: 1.5rem;
   letter-spacing: -0.25px;
   text-align: center;
-
+  
+  &.red {
+    --color: #ff0000;
+  }
   &.orange {
     --color: #ff8f00;
   }

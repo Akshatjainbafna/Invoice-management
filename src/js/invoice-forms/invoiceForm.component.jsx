@@ -127,7 +127,17 @@ const InvoiceForm = ({
       ...prevState,
       items: [
         ...prevState.items,
-        { name: "", quantity: 0, price: 0, total: 0 },
+        { name: "", quantity: "", price: 0, total: 0 },
+      ],
+    }));
+  };
+  const handleAddWork = (e) => {
+    e.preventDefault();
+    setFormData((prevState) => ({
+      ...prevState,
+      items: [
+        ...prevState.items,
+        { work: "", hours: "", price: 0, total: 0 },
       ],
     }));
   };
@@ -387,37 +397,30 @@ const InvoiceForm = ({
           <section>
             <h4 className="fs-20 fw-bold text-blue-dark">Item list</h4>
             <table className="mt-16">
-              <thead>
-                <tr>
-                  <th>Item Name</th>
-                  <th>Qty.</th>
-                  <th>Price</th>
-                  <th>Total</th>
-                  <th></th>
-                </tr>
-              </thead>
               <tbody>
                 {items.map((item, index) => (
                   <tr key={index}>
                     <td>
-                      <label htmlFor="items-name">Item name</label>
+                      <label htmlFor="items-name">{item.name != undefined ? "Item name" : "Work Name"}</label>
                       <input
                         type="text"
                         id="items-name"
                         name="items.name"
                         value={item.name}
                         onChange={(e) => handleInputChange(e, index)}
+                        placeholder={item.name != undefined ? "Item name" : "Work Name"}
                         required
                       />
                     </td>
                     <td>
-                      <label htmlFor="items-quantity">Qty.</label>
+                      <label htmlFor="items-quantity">{item.quantity != undefined ? "Qty." : "Hours"}</label>
                       <input
                         type="number"
                         id="items-quantity"
                         name="items.quantity"
                         value={item.quantity}
                         onChange={(e) => handleInputChange(e, index)}
+                        placeholder={item.quantity != undefined ? "Qty." : "Hours"}
                         required
                         ref={formFooterRef}
                       />
@@ -451,12 +454,20 @@ const InvoiceForm = ({
                   </tr>
                 ))}
                 <tr>
-                  <td colSpan="5">
+                  <td colSpan="3">
                     <button
-                      className="button-main button-6"
+                      className="button-main button-3"
                       onClick={(e) => handleAddItem(e)}
                     >
                       Add New Item
+                    </button>
+                    </td>
+                    <td colSpan="3">
+                    <button
+                      className="button-main button-3"
+                      onClick={(e) => handleAddWork(e)}
+                    >
+                      Add New Work
                     </button>
                   </td>
                 </tr>
