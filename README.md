@@ -8,7 +8,7 @@ A User friendly invoice app in which you can create, edit, manage and send invoi
 - Firebase
 - SCSS
 
-Note: The app is build using CRA command line tool to build React app.
+Note: The app is build using **create-react-app** command line tool to build React app.
 
 How to run the App?
 
